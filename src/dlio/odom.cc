@@ -43,10 +43,10 @@ dlio::OdomNode::OdomNode() : Node("dlio_odom_node") {
   this->imu_sub = this->create_subscription<sensor_msgs::msg::Imu>("imu", rclcpp::SensorDataQoS(),
       std::bind(&dlio::OdomNode::callbackImu, this, std::placeholders::_1), imu_sub_opt);
 
-  this->odom_pub     = this->create_publisher<nav_msgs::msg::Odometry>("odom", 1);
+  // this->odom_pub     = this->create_publisher<nav_msgs::msg::Odometry>("odom", 1);
   this->pose_pub     = this->create_publisher<geometry_msgs::msg::PoseStamped>("pose", 1);
-  this->path_pub     = this->create_publisher<nav_msgs::msg::Path>("path", 1);
-  this->kf_pose_pub  = this->create_publisher<geometry_msgs::msg::PoseArray>("kf_pose", 1);
+  // this->path_pub     = this->create_publisher<nav_msgs::msg::Path>("path", 1);
+  // this->kf_pose_pub  = this->create_publisher<geometry_msgs::msg::PoseArray>("kf_pose", 1);
   this->kf_cloud_pub = this->create_publisher<sensor_msgs::msg::PointCloud2>("kf_cloud", 1);
   this->deskewed_pub = this->create_publisher<sensor_msgs::msg::PointCloud2>("deskewed", 1);
 
@@ -320,28 +320,28 @@ void dlio::OdomNode::start() {
 void dlio::OdomNode::publishPose() {
 
   // nav_msgs::msg::Odometry
-  this->odom_ros.header.stamp = this->imu_stamp;
-  this->odom_ros.header.frame_id = this->odom_frame;
-  this->odom_ros.child_frame_id = this->baselink_frame;
+  // this->odom_ros.header.stamp = this->imu_stamp;
+  // this->odom_ros.header.frame_id = this->odom_frame;
+  // this->odom_ros.child_frame_id = this->baselink_frame;
 
-  this->odom_ros.pose.pose.position.x = this->state.p[0];
-  this->odom_ros.pose.pose.position.y = this->state.p[1];
-  this->odom_ros.pose.pose.position.z = this->state.p[2];
+  // this->odom_ros.pose.pose.position.x = this->state.p[0];
+  // this->odom_ros.pose.pose.position.y = this->state.p[1];
+  // this->odom_ros.pose.pose.position.z = this->state.p[2];
 
-  this->odom_ros.pose.pose.orientation.w = this->state.q.w();
-  this->odom_ros.pose.pose.orientation.x = this->state.q.x();
-  this->odom_ros.pose.pose.orientation.y = this->state.q.y();
-  this->odom_ros.pose.pose.orientation.z = this->state.q.z();
+  // this->odom_ros.pose.pose.orientation.w = this->state.q.w();
+  // this->odom_ros.pose.pose.orientation.x = this->state.q.x();
+  // this->odom_ros.pose.pose.orientation.y = this->state.q.y();
+  // this->odom_ros.pose.pose.orientation.z = this->state.q.z();
 
-  this->odom_ros.twist.twist.linear.x = this->state.v.lin.w[0];
-  this->odom_ros.twist.twist.linear.y = this->state.v.lin.w[1];
-  this->odom_ros.twist.twist.linear.z = this->state.v.lin.w[2];
+  // this->odom_ros.twist.twist.linear.x = this->state.v.lin.w[0];
+  // this->odom_ros.twist.twist.linear.y = this->state.v.lin.w[1];
+  // this->odom_ros.twist.twist.linear.z = this->state.v.lin.w[2];
 
-  this->odom_ros.twist.twist.angular.x = this->state.v.ang.b[0];
-  this->odom_ros.twist.twist.angular.y = this->state.v.ang.b[1];
-  this->odom_ros.twist.twist.angular.z = this->state.v.ang.b[2];
+  // this->odom_ros.twist.twist.angular.x = this->state.v.ang.b[0];
+  // this->odom_ros.twist.twist.angular.y = this->state.v.ang.b[1];
+  // this->odom_ros.twist.twist.angular.z = this->state.v.ang.b[2];
 
-  this->odom_pub->publish(this->odom_ros);
+  // this->odom_pub->publish(this->odom_ros);
 
   // geometry_msgs::msg::PoseStamped
   this->pose_ros.header.stamp = this->imu_stamp;
@@ -364,24 +364,24 @@ void dlio::OdomNode::publishToROS(pcl::PointCloud<PointType>::ConstPtr published
   this->publishCloud(published_cloud, T_cloud);
 
   // nav_msgs::msg::Path
-  this->path_ros.header.stamp = this->imu_stamp;
-  this->path_ros.header.frame_id = this->odom_frame;
+  // this->path_ros.header.stamp = this->imu_stamp;
+  // this->path_ros.header.frame_id = this->odom_frame;
 
-  geometry_msgs::msg::PoseStamped p;
-  p.header.stamp = this->imu_stamp;
-  p.header.frame_id = this->odom_frame;
-  p.pose.position.x = this->state.p[0];
-  p.pose.position.y = this->state.p[1];
-  p.pose.position.z = this->state.p[2];
-  p.pose.orientation.w = this->state.q.w();
-  p.pose.orientation.x = this->state.q.x();
-  p.pose.orientation.y = this->state.q.y();
-  p.pose.orientation.z = this->state.q.z();
+  // geometry_msgs::msg::PoseStamped p;
+  // p.header.stamp = this->imu_stamp;
+  // p.header.frame_id = this->odom_frame;
+  // p.pose.position.x = this->state.p[0];
+  // p.pose.position.y = this->state.p[1];
+  // p.pose.position.z = this->state.p[2];
+  // p.pose.orientation.w = this->state.q.w();
+  // p.pose.orientation.x = this->state.q.x();
+  // p.pose.orientation.y = this->state.q.y();
+  // p.pose.orientation.z = this->state.q.z();
 
-  this->path_ros.poses.push_back(p);
-  this->path_pub->publish(this->path_ros);
+  // this->path_ros.poses.push_back(p);
+  // this->path_pub->publish(this->path_ros);
 
-  // transform: odom to baselink
+  // // transform: odom to baselink
   geometry_msgs::msg::TransformStamped transformStamped;
 
   transformStamped.header.stamp = this->imu_stamp;
@@ -457,20 +457,20 @@ void dlio::OdomNode::publishCloud(pcl::PointCloud<PointType>::ConstPtr published
 void dlio::OdomNode::publishKeyframe(std::pair<std::pair<Eigen::Vector3f, Eigen::Quaternionf>, pcl::PointCloud<PointType>::ConstPtr> kf, rclcpp::Time timestamp) {
 
   // Push back
-  geometry_msgs::msg::Pose p;
-  p.position.x = kf.first.first[0];
-  p.position.y = kf.first.first[1];
-  p.position.z = kf.first.first[2];
-  p.orientation.w = kf.first.second.w();
-  p.orientation.x = kf.first.second.x();
-  p.orientation.y = kf.first.second.y();
-  p.orientation.z = kf.first.second.z();
-  this->kf_pose_ros.poses.push_back(p);
+  // geometry_msgs::msg::Pose p;
+  // p.position.x = kf.first.first[0];
+  // p.position.y = kf.first.first[1];
+  // p.position.z = kf.first.first[2];
+  // p.orientation.w = kf.first.second.w();
+  // p.orientation.x = kf.first.second.x();
+  // p.orientation.y = kf.first.second.y();
+  // p.orientation.z = kf.first.second.z();
+  // this->kf_pose_ros.poses.push_back(p);
 
-  // Publish
-  this->kf_pose_ros.header.stamp = timestamp;
-  this->kf_pose_ros.header.frame_id = this->odom_frame;
-  this->kf_pose_pub->publish(this->kf_pose_ros);
+  // // Publish
+  // this->kf_pose_ros.header.stamp = timestamp;
+  // this->kf_pose_ros.header.frame_id = this->odom_frame;
+  // this->kf_pose_pub->publish(this->kf_pose_ros);
 
   // publish keyframe scan for map
   if (this->vf_use_) {
